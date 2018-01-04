@@ -2,6 +2,8 @@
 <div style="text-align:center">
   <img src="../assets/hitbtc.png" />
 </div>
+
+
 <table *ngIf="wallet.length > 0">
   <tr>
     <th>Nom</th>
@@ -38,3 +40,8 @@
     <td>{{ transaction.amount}}</td>
   </tr>
 </table>
+
+<form>
+  <label>ApiKey</label><input type="text" name="apiKey" [(ngModel)]="apiKey" /><br />
+  <label>PrivateKey</label><input type="text" name="privateKey" [(ngModel)]="privateKey"/>
+</form>

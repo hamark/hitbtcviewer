@@ -7,6 +7,7 @@ import {TradingService} from './hitbtc/api/trading.api';
 import {Balance} from './hitbtc/model/balance';
 import {WalletService} from './wallet/wallet.service';
 import {Transaction} from './hitbtc/model/transaction';
+import {AuthentificationService} from './hitbtc/auth/authentification.service';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,8 @@ export class AppComponent implements OnInit {
 
   ownCurrencies: Stock[] = [];
 
-  constructor(private walletService: WalletService) {
+  constructor(private walletService: WalletService,
+              private authService: AuthentificationService) {
 
   }
 
@@ -29,6 +31,10 @@ export class AppComponent implements OnInit {
 
     this.walletService.loadWallet();
     this.walletService.loadInvestment();
+  }
+
+  isAuthDefined() {
+    return this.authService.isAuthDefine();
   }
 
   get wallet() {
@@ -43,5 +49,20 @@ export class AppComponent implements OnInit {
     return this.walletService.totalUSD();
   }
 
+  get apiKey() {
+    return this.authService.apiKey;
+  }
+
+  get privateKey() {
+    return this.authService.privateKey;
+  }
+
+  set apiKey(apiKey: string) {
+    this.authService.apiKey = apiKey;
+  }
+
+  set privateKey(privateKey: string) {
+    this.authService.privateKey = privateKey;
+  }
 
 }

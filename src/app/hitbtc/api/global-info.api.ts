@@ -6,7 +6,7 @@ import {Ticker} from '../model/ticker';
 @Injectable()
 export class GlobalInfoService {
 
-  private publicApiUrl = 'https://api.hitbtc.com/api/2/public/';
+  private publicApiUrl = '/api/2/public/';
 
   private tikerUrl = this.publicApiUrl + 'ticker';
   private balanceUrl = this.publicApiUrl + 'ticker';

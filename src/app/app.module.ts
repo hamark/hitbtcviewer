@@ -12,6 +12,7 @@ import {GlobalInfoService} from './hitbtc/api/global-info.api';
 import {Stock} from './wallet/stock';
 import {WalletService} from './wallet/wallet.service';
 import {DecimalPipe} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import {DecimalPipe} from '@angular/common';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule
   ],
   providers: [{

@@ -8,8 +8,8 @@ import {Transaction} from '../model/transaction';
 @Injectable()
 export class TradingService {
 
-  private balanceUrl = 'https://api.hitbtc.com/api/2/trading/balance';
-  private transactionsUrl = 'https://api.hitbtc.com/api/2/account/transactions';
+  private balanceUrl = '/api/2/trading/balance';
+  private transactionsUrl = '/api/2/account/transactions';
 
 
   constructor(private http: HttpClient) {}
