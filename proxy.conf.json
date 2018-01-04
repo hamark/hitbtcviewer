@@ -1,0 +1,6 @@
+{
+  "/api": {
+    "target": "https://api.hitbtc.com",
+    "secure": false
+}
+}
