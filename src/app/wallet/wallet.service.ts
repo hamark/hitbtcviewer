@@ -82,7 +82,7 @@ export class WalletService {
 
   totalTaux(): number {
     if (this.investissement == 0) return 0;
-    return this.totalUSD() * 100 / this.investissement;
+    return this.totalUSD() * 100 / this.investissement - 100;
 
   }
 
