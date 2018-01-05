@@ -3,8 +3,20 @@
   <img src="../assets/hitbtc.png" />
 </div>
 
+<table>
+  <tr>
+    <th>Investissement</th>
+    <th>Actuel</th>
+    <th>Taux</th>
+  </tr>
+  <tr>
+    <td>{{ wallet.investissement | number}}</td>
+    <td>{{ wallet.totalUSD() | number }}</td>
+    <td [ngClass]="(wallet.totalTaux() > 100) ? 'green' : 'red'">{{ wallet.totalTaux() | number }}</td>
+  </tr>
+</table>
 
-<table *ngIf="wallet.length > 0">
+<table *ngIf="wallet.wallet.length > 0">
   <tr>
     <th>Nom</th>
     <th>Nombre</th>
@@ -12,19 +24,12 @@
     <th>Evolution 24H</th>
     <th>Total $</th>
   </tr>
-  <tr *ngFor="let stock of wallet" >
+  <tr *ngFor="let stock of wallet.wallet" >
     <td>{{stock.currency}}</td>
     <td>{{stock.total()}}</td>
     <td><span  *ngIf="stock.cours">{{ stock.cours.last}}</span></td>
     <td [ngClass]="(stock.evolution() > 0) ? 'green' : 'red'">{{ stock.evolution() | number}} %</td>
     <td>{{ stock.totalUSD() | number }} $</td>
-  </tr>
-  <tr>
-    <td>Total</td>
-    <td> - </td>
-    <td> - </td>
-    <td> - </td>
-    <td> {{ walletTotal | number }} $ </td>
   </tr>
 </table>
 

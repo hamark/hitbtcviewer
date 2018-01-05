@@ -4,6 +4,8 @@ import {Ticker} from '../model/ticker';
 import {Observable} from 'rxjs/Observable';
 import {Balance} from '../model/balance';
 import {Transaction} from '../model/transaction';
+import {map} from 'rxjs/operators';
+import {Candle} from '../model/candle';
 
 @Injectable()
 export class TradingService {
@@ -19,6 +21,12 @@ export class TradingService {
   }
 
   getTransactions(): Observable<Transaction[]> {
-    return this.http.get<Transaction[]>(this.transactionsUrl);
+    return this.http.get<Transaction[]>(this.transactionsUrl).pipe(map((transactionsRecup) => {
+      let transactions : Transaction[] = [];
+      for(let transaction of transactionsRecup) {
+        transactions.push(new Transaction(transaction));
+      }
+      return transactions;
+    }));;
   }
 }

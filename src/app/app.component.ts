@@ -38,16 +38,13 @@ export class AppComponent implements OnInit {
   }
 
   get wallet() {
-    return this.walletService.wallet;
+    return this.walletService;
   }
 
   get transactions(): Transaction [] {
     return this.walletService.transactions;
   }
 
-  get walletTotal() {
-    return this.walletService.totalUSD();
-  }
 
   get apiKey() {
     return this.authService.apiKey;

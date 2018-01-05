@@ -1,4 +1,12 @@
 export class Transaction {
+
+  constructor(transaction: Transaction) {
+    this.amount = transaction.amount;
+    this.type = transaction.type;
+    this.createdAt = new Date(transaction.createdAt);
+  }
+
+
   id: string;
   index: string;
   currency: string;
