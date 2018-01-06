@@ -6,3 +6,5 @@
 export const environment = {
   production: false
 };
+
+export const hitBtcUrlApi = "/api/2";

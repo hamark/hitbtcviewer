@@ -7,3 +7,18 @@
   font-weight: bold;
   color : green;
 }
+
+.current {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.current-values {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.margin-top {
+  margin-top : 25px;
+}

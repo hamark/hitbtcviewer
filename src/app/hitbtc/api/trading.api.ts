@@ -6,12 +6,13 @@ import {Balance} from '../model/balance';
 import {Transaction} from '../model/transaction';
 import {map} from 'rxjs/operators';
 import {Candle} from '../model/candle';
+import {hitBtcUrlApi} from '../../../environments/environment';
 
 @Injectable()
 export class TradingService {
 
-  private balanceUrl = '/api/2/trading/balance';
-  private transactionsUrl = '/api/2/account/transactions';
+  private balanceUrl = hitBtcUrlApi + '/trading/balance';
+  private transactionsUrl = hitBtcUrlApi + '/account/transactions';
 
 
   constructor(private http: HttpClient) {}

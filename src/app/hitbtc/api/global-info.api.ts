@@ -4,11 +4,12 @@ import {Observable} from 'rxjs/Observable';
 import {Ticker} from '../model/ticker';
 import {Candle} from '../model/candle';
 import {map} from 'rxjs/operators';
+import {hitBtcUrlApi} from '../../../environments/environment';
 
 @Injectable()
 export class GlobalInfoService {
 
-  private publicApiUrl = '/api/2/public/';
+  private publicApiUrl = hitBtcUrlApi + '/public/';
 
   private tikerUrl = this.publicApiUrl + 'ticker';
   private candleUrl = this.publicApiUrl + 'candles';

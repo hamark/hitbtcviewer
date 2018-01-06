@@ -1,44 +1,89 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <img src="../assets/hitbtc.png" />
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-3">
+      <div style="text-align:center">
+        <img src="../assets/hitbtc.png"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-3">
+      <div class="row">
+        <div class="col-md-12">
+          <span>Current change</span><br/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <span class="current" [ngClass]="(wallet.totalTaux() >= 0) ? 'green' : 'red'">{{ wallet.totalTaux() | number }} %</span><br/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+
+      <div class="row">
+        <div class="col-md-6">
+          <span>Current value</span><br/>
+        </div>
+        <div class="col-md-6">
+          <span>Cost value</span><br/>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <span class="current">{{ wallet.totalUSD() | number }} $ </span>
+        </div>
+        <div class="col-md-6">
+          <span class="current">{{ wallet.investissement | number }} $ </span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="row justify-content-center margin-top">
+    <div class="col-md-12">
+      <table *ngIf="wallet.wallet.length > 0" class="table table-dark">
+        <tr>
+          <th>Nom</th>
+          <th>Nombre</th>
+          <th>Valeur actuelle</th>
+          <th>Evolution 24H</th>
+          <th>Total $</th>
+        </tr>
+        <tr *ngFor="let stock of wallet.wallet">
+          <td>{{stock.currency}}</td>
+          <td>{{stock.total() | number}}</td>
+          <td><span *ngIf="stock.cours">{{ stock.cours.last}}</span></td>
+          <td [ngClass]="(stock.evolution() > 0) ? 'green' : 'red'">{{ stock.evolution() | number}} %</td>
+          <td>{{ stock.totalUSD() | number }} $</td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+
+    <div class="col-md-5">
+      <form>
+        <div class="form-group">
+          <label for="apiKey">ApiKey</label>
+          <input type="text" class="form-control" name="apiKey" id="apiKey" [(ngModel)]="apiKey" placeholder="XXX"/>
+        </div>
+        <div class="form-group">
+          <label for="privateKey">PrivateKey</label>
+          <input type="password" class="form-control" name="privateKey" id="privateKey" [(ngModel)]="privateKey"
+                 placeholder="XXX"/>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
-
-<div>
-  <h2>{{ wallet.totalUSD() | number }} $ <span [ngClass]="(wallet.totalTaux() >= 0) ? 'green' : 'red'">{{ wallet.totalTaux() | number }} %</span></h2>
-</div>
-
-
-<table *ngIf="wallet.wallet.length > 0">
-  <tr>
-    <th>Nom</th>
-    <th>Nombre</th>
-    <th>Valeur actuelle</th>
-    <th>Evolution 24H</th>
-    <th>Total $</th>
-  </tr>
-  <tr *ngFor="let stock of wallet.wallet" >
-    <td>{{stock.currency}}</td>
-    <td>{{stock.total()}}</td>
-    <td><span  *ngIf="stock.cours">{{ stock.cours.last}}</span></td>
-    <td [ngClass]="(stock.evolution() > 0) ? 'green' : 'red'">{{ stock.evolution() | number}} %</td>
-    <td>{{ stock.totalUSD() | number }} $</td>
-  </tr>
-</table>
-
-<br />
-
-<table>
-  <tr>
-    <th>Currency</th>
-    <th>Amount</th>
-  </tr>
-  <tr *ngFor="let transaction of transactions">
-    <td>{{ transaction.currency}}</td>
-    <td>{{ transaction.amount}}</td>
-  </tr>
-</table>
-
-<form>
-  <label>ApiKey</label><input type="text" name="apiKey" [(ngModel)]="apiKey" /><br />
-  <label>PrivateKey</label><input type="password" name="privateKey" [(ngModel)]="privateKey"/>
-</form>

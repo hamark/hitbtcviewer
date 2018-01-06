@@ -13,6 +13,7 @@ import {Stock} from './wallet/stock';
 import {WalletService} from './wallet/wallet.service';
 import {DecimalPipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import { AlertModule } from 'ngx-bootstrap';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {FormsModule} from '@angular/forms';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AlertModule.forRoot()
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
