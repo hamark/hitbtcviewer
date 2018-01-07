@@ -18,6 +18,16 @@ export class WalletService {
       {currency: 'BTC', symbol: 'BTCUSD'}
     ];
 
+  public globalConversion: { currency: string, convertCurrency: string } [] =
+    [
+      {currency: 'USD', convertCurrency: ''},
+      {currency: 'USDT', convertCurrency: ''},
+      {currency: 'BTC', convertCurrency: 'USD'},
+      {currency: 'ETH', convertCurrency: 'USD'},
+    ];
+
+  public currencyConversion: { currency: string, convertCurrency: string } [] = [];
+
   public wallet: Stock [] = [];
 
   public transactions: Transaction [];
@@ -69,30 +79,13 @@ export class WalletService {
         this.globalInfoService.getCandles(symbol, 100, 'D1').subscribe((candles) => {
           let candle = this.findCandleForTransaction(transaction, candles);
           if (candle) {
-              this.investissement += ((+candle.open + +candle.close) / 2) * +transaction.amount;
+            this.investissement += ((+candle.open + +candle.close) / 2) * +transaction.amount;
           }
         });
       }
     });
   }
 
-  private getTransactions(ethCandles: Candle[]) {
-    this.tradingService.getTransactions().subscribe((transactions) => {
-      // Pour l'instant on gère que l'ETH en entrée
-      this.investissement = 0;
-
-    });
-  }
-
-  // investissement() {
-  //   for (let transaction of this.transactions) {
-  //     if (transaction.type != 'payin') continue;
-  //     let candle = this.findCandleForTransaction(transaction, this.cours.get(transaction.currency));
-  //     if (candle) {
-  //       this.investissement += ((+candle.open + +candle.close) / 2) * +transaction.amount;
-  //     }
-  //   }
-  // }
 
   totalUSD() {
     let total = 0;
@@ -112,28 +105,11 @@ export class WalletService {
   }
 
   private loadCurrentStockValue(stock: Stock) {
-    this.globalInfoService.getTicker(stock.currency, 'USD')
-      .subscribe((ticker: Ticker) => {
-          stock.cours = ticker;
-        },
-        (error) => {
-          this.globalInfoService.getTicker(stock.currency, 'USDT')
-            .subscribe((ticker: Ticker) => {
-              stock.cours = ticker;
-            },
-              (error2) => {
-                this.globalInfoService.getTicker(stock.currency, 'BTC')
-                  .subscribe((ticker: Ticker) => {
-                    stock.cours = ticker;
-                    this.globalInfoService.getTicker('BTC', 'USD')
-                      .subscribe((ticker: Ticker) => {
-                        stock.coursUsd = ticker;
-                      });
-                  });
-              });
-        }
-      );
+      if(stock.currency == 'USD') return;
+      this.getTickerForGlobalConversion(stock, 0);
   }
+
+
 
   private findCandleForTransaction(transaction: Transaction, ethCandles: Candle[]): Candle {
     for (let candle of ethCandles) {
@@ -147,12 +123,28 @@ export class WalletService {
   }
 
   private getSymbol(currency: string) {
-    for( let cs of this.currencySymbol) {
+    for (let cs of this.currencySymbol) {
       if (cs.currency === currency) {
         return cs.symbol;
       }
     }
-    console.error("Currency " + currency + " not found");
+    console.error('Currency ' + currency + ' not found');
   }
 
+  private getTickerForGlobalConversion(stock: Stock, index: number) {
+    this.globalInfoService.getTicker(stock.currency, this.globalConversion[index].currency)
+      .subscribe((ticker: Ticker) => {
+          stock.cours = ticker;
+          if(this.globalConversion[index].convertCurrency != '') {
+            this.globalInfoService.getTicker(this.globalConversion[index].currency, this.globalConversion[index].convertCurrency).subscribe((tickerToUsd) => {
+              stock.coursUsd = tickerToUsd;
+            })
+          }
+        }, (error) => {
+          if (this.globalConversion.length > index) {
+            this.getTickerForGlobalConversion(stock, index + 1);
+          }
+        }
+      );
+  }
 }
