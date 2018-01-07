@@ -1,69 +1,68 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="container">
-  <div class="row justify-content-center">
-    <div class="col-sm-3">
-      <div style="text-align:center">
-        <img src="../assets/hitbtc.png"/>
-      </div>
-    </div>
-  </div>
 
-  <div class="row justify-content-center">
-    <div class="col-sm-4">
-      <div class="row">
-        <div class="col-sm-12">
-          <span>Current change</span><br/>
+  <div class="row justify-content-between">
+    <div class="col-6">
+      <div class="container-fluid">
+        <div class="row">
+          <span>Current change</span>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12">
-          <span class="current" [ngClass]="(wallet.totalTaux() >= 0) ? 'green' : 'red'">{{ wallet.totalTaux() | number }} %</span><br/>
+        <div class="row">
+          <span class="current" [ngClass]="(wallet.totalTaux() >= 0) ? 'green' : 'red'">{{ wallet.totalTaux() | number }} %</span>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-sm-8">
-
-      <div class="row">
-        <div class="col-sm-6">
-          <span>Current value</span><br/>
+    <div class="col-6">
+      <div class="container-fluid">
+        <div class="row">
+          <span>Total gain</span>
         </div>
-        <div class="col-sm-6">
-          <span>Cost value</span><br/>
+        <div class="row">
+          <span class="current" [ngClass]="(wallet.totalGain() >= 0) ? 'green' : 'red'">{{ wallet.totalGain() | number }} $</span>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-sm-6">
+    </div>
+  </div>
+
+  <div class="row justify-content-between">
+    <div class="col-6">
+      <div class="container-fluid">
+        <div class="row">
+          <span>Current value</span>
+        </div>
+        <div class="row">
           <span class="current">{{ wallet.totalUSD() | number }} $ </span>
         </div>
-        <div class="col-sm-6">
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="container-fluid">
+        <div class="row">
+          <span>Cost value</span>
+        </div>
+        <div class="row">
           <span class="current">{{ wallet.investissement | number }} $ </span>
         </div>
       </div>
 
     </div>
-
   </div>
 
-
   <div class="row justify-content-center margin-top">
-    <div class="col-sm-12">
+    <div class="col-12">
       <table *ngIf="wallet.wallet.length > 0" class="table table-dark">
         <tr>
           <th>Nom</th>
-          <th>Nombre</th>
           <th>Valeur actuelle</th>
           <th>Evolution 24H</th>
           <th>Total $</th>
         </tr>
         <tr *ngFor="let stock of wallet.wallet">
           <td>{{stock.currency}}</td>
-          <td>{{stock.total() | number: '.2-5' }}</td>
-          <td><span *ngIf="stock.cours">{{ stock.cours.last}}</span></td>
-          <td [ngClass]="(stock.evolution() > 0) ? 'green' : 'red'">{{ stock.evolution() | number: '.2'}} %</td>
-          <td>{{ stock.totalUSD() | number: '.2' }} $</td>
+          <td><span *ngIf="stock.cours">{{ stock.cours.last | number: '.1'}}</span></td>
+          <td [ngClass]="(stock.evolution() > 0) ? 'green' : 'red'">{{ stock.evolution() | number: '.1'}} %</td>
+          <td>{{ stock.totalUSD() | number: '.1' }} $</td>
         </tr>
       </table>
 
@@ -72,7 +71,7 @@
 
   <div class="row justify-content-center">
 
-    <div class="col-sm-8">
+    <div class="col-8">
       <form>
         <div class="form-group">
           <label for="apiKey">ApiKey</label>

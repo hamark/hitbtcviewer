@@ -12,9 +12,17 @@ import {Candle} from '../hitbtc/model/candle';
 @Injectable()
 export class WalletService {
 
+  public currencySymbol: { currency: string, symbol: string } [] =
+    [
+      {currency: 'ETH', symbol: 'ETHUSD'},
+      {currency: 'BTC', symbol: 'BTCUSD'}
+    ];
+
   public wallet: Stock [] = [];
 
   public transactions: Transaction [];
+
+  public cours: Map<string, Candle[]> = new Map<string, Candle[]>();
 
   private updateStarted = false;
 
@@ -52,25 +60,39 @@ export class WalletService {
   }
 
   loadInvestment() {
-    this.globalInfoService.getCandles('ETHUSD', 100, 'D1').subscribe((ethCandles) => {
-      this.getTransactions(ethCandles);
+    this.tradingService.getTransactions().subscribe((transactions) => {
+      this.transactions = transactions;
+      this.investissement = 0;
+      for (let transaction of this.transactions) {
+        if (transaction.type != 'payin') continue;
+        let symbol = this.getSymbol(transaction.currency);
+        this.globalInfoService.getCandles(symbol, 100, 'D1').subscribe((candles) => {
+          let candle = this.findCandleForTransaction(transaction, candles);
+          if (candle) {
+              this.investissement += ((+candle.open + +candle.close) / 2) * +transaction.amount;
+          }
+        });
+      }
     });
-
   }
 
   private getTransactions(ethCandles: Candle[]) {
     this.tradingService.getTransactions().subscribe((transactions) => {
       // Pour l'instant on gère que l'ETH en entrée
       this.investissement = 0;
-      for (let transaction of transactions) {
-        if(transaction.type != "payin") continue;
-        let candle = this.findCandleForTransaction(transaction, ethCandles);
-        if (candle) {
-          this.investissement += ((+candle.open + +candle.close) / 2) * +transaction.amount;
-        }
-      }
+
     });
   }
+
+  // investissement() {
+  //   for (let transaction of this.transactions) {
+  //     if (transaction.type != 'payin') continue;
+  //     let candle = this.findCandleForTransaction(transaction, this.cours.get(transaction.currency));
+  //     if (candle) {
+  //       this.investissement += ((+candle.open + +candle.close) / 2) * +transaction.amount;
+  //     }
+  //   }
+  // }
 
   totalUSD() {
     let total = 0;
@@ -83,7 +105,10 @@ export class WalletService {
   totalTaux(): number {
     if (this.investissement == 0) return 0;
     return this.totalUSD() * 100 / this.investissement - 100;
+  }
 
+  totalGain(): number {
+    return this.totalUSD() - this.investissement;
   }
 
   private loadCurrentStockValue(stock: Stock) {
@@ -95,7 +120,17 @@ export class WalletService {
           this.globalInfoService.getTicker(stock.currency, 'USDT')
             .subscribe((ticker: Ticker) => {
               stock.cours = ticker;
-            });
+            },
+              (error2) => {
+                this.globalInfoService.getTicker(stock.currency, 'BTC')
+                  .subscribe((ticker: Ticker) => {
+                    stock.cours = ticker;
+                    this.globalInfoService.getTicker('BTC', 'USD')
+                      .subscribe((ticker: Ticker) => {
+                        stock.coursUsd = ticker;
+                      });
+                  });
+              });
         }
       );
   }
@@ -109,6 +144,15 @@ export class WalletService {
       }
     }
     return null;
+  }
+
+  private getSymbol(currency: string) {
+    for( let cs of this.currencySymbol) {
+      if (cs.currency === currency) {
+        return cs.symbol;
+      }
+    }
+    console.error("Currency " + currency + " not found");
   }
 
 }

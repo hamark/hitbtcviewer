@@ -8,6 +8,7 @@ export class Stock {
   available: number;
   reserved: number;
   cours: Ticker;
+  coursUsd: Ticker;
 
   constructor(balance: Balance) {
     this.setBalance(balance);
@@ -36,7 +37,14 @@ export class Stock {
       if(this.currency === 'USD') return this.total();
       return 0;
     }
-    return this.total() * this.cours.last;
+    return this.total() * this.getValeurUSD();
   }
 
+  private getValeurUSD() {
+    if(this.cours.symbol.match('.*USD.*'))
+      return this.cours.last;
+    else {
+      return this.cours.last * this.coursUsd.last;
+    }
+  }
 }

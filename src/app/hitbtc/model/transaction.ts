@@ -4,6 +4,7 @@ export class Transaction {
     this.amount = transaction.amount;
     this.type = transaction.type;
     this.createdAt = new Date(transaction.createdAt);
+    this.currency = transaction.currency;
   }
 
 
