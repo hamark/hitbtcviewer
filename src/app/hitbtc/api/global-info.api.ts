@@ -5,6 +5,7 @@ import {Ticker} from '../model/ticker';
 import {Candle} from '../model/candle';
 import {map} from 'rxjs/operators';
 import {hitBtcUrlApi} from '../../../environments/environment';
+import {Symbol} from '../model/symbol';
 
 @Injectable()
 export class GlobalInfoService {
@@ -13,6 +14,7 @@ export class GlobalInfoService {
 
   private tikerUrl = this.publicApiUrl + 'ticker';
   private candleUrl = this.publicApiUrl + 'candles';
+  private symbolUrl = this.publicApiUrl + 'symbol';
 
 
   constructor(private http: HttpClient) {
@@ -32,6 +34,11 @@ export class GlobalInfoService {
         return candles;
       }));
   }
+
+  getSymbols(): Observable<Symbol[]> {
+    return this.http.get<Symbol[]>(this.symbolUrl);
+  }
+
 
 
 }

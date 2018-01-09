@@ -14,6 +14,7 @@ import {WalletService} from './wallet/wallet.service';
 import {DecimalPipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import { AlertModule } from 'ngx-bootstrap';
+import {StockService} from "./wallet/stock.service";
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import { AlertModule } from 'ngx-bootstrap';
     TradingService,
     GlobalInfoService,
     WalletService,
+    StockService,
     DecimalPipe],
   bootstrap: [AppComponent]
 })
