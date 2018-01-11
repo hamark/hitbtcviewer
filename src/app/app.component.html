@@ -56,12 +56,14 @@
           <th>Nom</th>
           <th>Valeur actuelle</th>
           <th>Evolution 24H</th>
+          <th>Evolution</th>
           <th>Total $</th>
         </tr>
         <tr *ngFor="let stock of wallet.wallet">
           <td>{{stock.currency}}</td>
           <td><span *ngIf="stock.cours">{{ stock.cours.last | number: '.1'}}</span></td>
           <td [ngClass]="(stock.evolution() > 0) ? 'green' : 'red'">{{ stock.evolution() | number: '.1'}} %</td>
+          <td [ngClass]="(getAveragePrice(stock.total(), stock.currency) > 0) ? 'green' : 'red'">{{ getAveragePrice(stock.total(), stock.currency) | number: '.1'}} %</td>
           <td>{{ stock.totalUSD() | number: '.1' }} $</td>
         </tr>
       </table>

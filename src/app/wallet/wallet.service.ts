@@ -1,5 +1,5 @@
 import {Stock} from './stock';
-import {TradingService} from '../hitbtc/api/trading.api';
+import {TradingApiService} from '../hitbtc/api/trading.api';
 import {Balance} from '../hitbtc/model/balance';
 import {Ticker} from '../hitbtc/model/ticker';
 import {GlobalInfoService} from '../hitbtc/api/global-info.api';
@@ -8,15 +8,11 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import {Transaction} from '../hitbtc/model/transaction';
 import {Candle} from '../hitbtc/model/candle';
+import {StockService} from './stock.service';
 
 @Injectable()
 export class WalletService {
 
-  public currencySymbol: { currency: string, symbol: string } [] =
-    [
-      {currency: 'ETH', symbol: 'ETHUSD'},
-      {currency: 'BTC', symbol: 'BTCUSD'}
-    ];
 
   public globalConversion: { currency: string, convertCurrency: string } [] =
     [
@@ -38,7 +34,8 @@ export class WalletService {
 
   public investissement = 0;
 
-  constructor(private tradingService: TradingService,
+  constructor(private tradingService: TradingApiService,
+              private stockService: StockService,
               private globalInfoService: GlobalInfoService) {
 
   }
@@ -73,11 +70,11 @@ export class WalletService {
     this.tradingService.getTransactions().subscribe((transactions) => {
       this.transactions = transactions;
       this.investissement = 0;
-      for (let transaction of this.transactions) {
-        if (transaction.type != 'payin') continue;
-        let symbol = this.getSymbol(transaction.currency);
+      for (const transaction of this.transactions) {
+        if (transaction.type !== 'payin') continue;
+        const symbol = this.stockService.getUSDSymbol(transaction.currency);
         this.globalInfoService.getCandles(symbol, 100, 'D1').subscribe((candles) => {
-          let candle = this.findCandleForTransaction(transaction, candles);
+          const candle = this.findCandleForTransaction(transaction, candles);
           if (candle) {
             this.investissement += ((+candle.open + +candle.close) / 2) * +transaction.amount;
           }
@@ -105,40 +102,32 @@ export class WalletService {
   }
 
   private loadCurrentStockValue(stock: Stock) {
-      if(stock.currency == 'USD') return;
+      if (stock.currency == 'USD') return;
       this.getTickerForGlobalConversion(stock, 0);
   }
 
 
 
   private findCandleForTransaction(transaction: Transaction, ethCandles: Candle[]): Candle {
-    for (let candle of ethCandles) {
-      if (candle.timestamp.getDate() == transaction.createdAt.getDate()
-        && candle.timestamp.getMonth() == transaction.createdAt.getMonth()
-        && candle.timestamp.getFullYear() == transaction.createdAt.getFullYear()) {
+    for (const candle of ethCandles) {
+      if (candle.timestamp.getDate() === transaction.createdAt.getDate()
+        && candle.timestamp.getMonth() === transaction.createdAt.getMonth()
+        && candle.timestamp.getFullYear() === transaction.createdAt.getFullYear()) {
         return candle;
       }
     }
     return null;
   }
 
-  private getSymbol(currency: string) {
-    for (let cs of this.currencySymbol) {
-      if (cs.currency === currency) {
-        return cs.symbol;
-      }
-    }
-    console.error('Currency ' + currency + ' not found');
-  }
 
   private getTickerForGlobalConversion(stock: Stock, index: number) {
     this.globalInfoService.getTicker(stock.currency, this.globalConversion[index].currency)
       .subscribe((ticker: Ticker) => {
           stock.cours = ticker;
-          if(this.globalConversion[index].convertCurrency != '') {
+          if (this.globalConversion[index].convertCurrency !== '') {
             this.globalInfoService.getTicker(this.globalConversion[index].currency, this.globalConversion[index].convertCurrency).subscribe((tickerToUsd) => {
               stock.coursUsd = tickerToUsd;
-            })
+            });
           }
         }, (error) => {
           if (this.globalConversion.length > index) {

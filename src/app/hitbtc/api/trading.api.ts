@@ -7,12 +7,14 @@ import {Transaction} from '../model/transaction';
 import {map} from 'rxjs/operators';
 import {Candle} from '../model/candle';
 import {hitBtcUrlApi} from '../../../environments/environment';
+import {Trade} from "../model/trades";
 
 @Injectable()
-export class TradingService {
+export class TradingApiService {
 
   private balanceUrl = hitBtcUrlApi + '/trading/balance';
   private transactionsUrl = hitBtcUrlApi + '/account/transactions';
+  private tradesUrl = hitBtcUrlApi + '/history/trades';
 
 
   constructor(private http: HttpClient) {}
@@ -29,5 +31,9 @@ export class TradingService {
       }
       return transactions;
     }));;
+  }
+
+  getTrades(): Observable<Trade[]> {
+    return this.http.get<Trade[]>(this.tradesUrl);
   }
 }

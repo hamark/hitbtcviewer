@@ -9,6 +9,7 @@ export class Stock {
   reserved: number;
   cours: Ticker;
   coursUsd: Ticker;
+  buyPrice: number;
 
   constructor(balance: Balance) {
     this.setBalance(balance);
