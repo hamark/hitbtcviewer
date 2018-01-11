@@ -8,7 +8,7 @@ import {hitBtcUrlApi} from '../../../environments/environment';
 import {Symbol} from '../model/symbol';
 
 @Injectable()
-export class GlobalInfoService {
+export class GlobalInfoApi {
 
   private publicApiUrl = hitBtcUrlApi + '/public/';
 
@@ -40,5 +40,7 @@ export class GlobalInfoService {
   }
 
 
-
+  getTickers(): Observable<Ticker[]> {
+    return this.http.get<Ticker[]>(this.tikerUrl);
+  }
 }

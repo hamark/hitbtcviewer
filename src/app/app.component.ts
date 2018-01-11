@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Ticker} from './hitbtc/model/ticker';
 import {Stock} from './wallet/stock';
-import {GlobalInfoService} from './hitbtc/api/global-info.api';
+import {GlobalInfoApi} from './hitbtc/api/global-info.api';
 import {TradingService} from './hitbtc/api/trading.api';
 import {Balance} from './hitbtc/model/balance';
 import {WalletService} from './wallet/wallet.service';

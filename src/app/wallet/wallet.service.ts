@@ -2,7 +2,7 @@ import {Stock} from './stock';
 import {TradingService} from '../hitbtc/api/trading.api';
 import {Balance} from '../hitbtc/model/balance';
 import {Ticker} from '../hitbtc/model/ticker';
-import {GlobalInfoService} from '../hitbtc/api/global-info.api';
+import {GlobalInfoApi} from '../hitbtc/api/global-info.api';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
@@ -39,7 +39,7 @@ export class WalletService {
   public investissement = 0;
 
   constructor(private tradingService: TradingService,
-              private globalInfoService: GlobalInfoService) {
+              private globalInfoService: GlobalInfoApi) {
 
   }
 

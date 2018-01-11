@@ -8,7 +8,7 @@ import {NoopInterceptor} from '@angular/common/http/src/interceptor';
 import {AuthentificationInterceptor} from './hitbtc/auth/authentification.interceptor';
 import {AuthentificationService} from './hitbtc/auth/authentification.service';
 import {TradingService} from './hitbtc/api/trading.api';
-import {GlobalInfoService} from './hitbtc/api/global-info.api';
+import {GlobalInfoApi} from './hitbtc/api/global-info.api';
 import {Stock} from './wallet/stock';
 import {WalletService} from './wallet/wallet.service';
 import {DecimalPipe} from '@angular/common';
@@ -34,7 +34,7 @@ import {StockService} from "./wallet/stock.service";
   },
     AuthentificationService,
     TradingService,
-    GlobalInfoService,
+    GlobalInfoApi,
     WalletService,
     StockService,
     DecimalPipe],
