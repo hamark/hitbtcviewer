@@ -8,6 +8,7 @@ import {Balance} from './hitbtc/model/balance';
 import {WalletService} from './wallet/wallet.service';
 import {Transaction} from './hitbtc/model/transaction';
 import {AuthentificationService} from './hitbtc/auth/authentification.service';
+import {TickerService} from "./wallet/ticker.service";
 
 @Component({
   selector: 'app-root',
@@ -23,12 +24,14 @@ export class AppComponent implements OnInit {
   ownCurrencies: Stock[] = [];
 
   constructor(private walletService: WalletService,
-              private authService: AuthentificationService) {
+              private authService: AuthentificationService,
+              private tickerService: TickerService) {
 
   }
 
   ngOnInit(): void {
 
+    this.tickerService.runTickerLoad();
     this.walletService.loadWallet();
     this.walletService.loadInvestment();
   }

@@ -8,6 +8,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import {Transaction} from '../hitbtc/model/transaction';
 import {Candle} from '../hitbtc/model/candle';
+import {TickerService} from './ticker.service';
 
 @Injectable()
 export class WalletService {
@@ -39,6 +40,7 @@ export class WalletService {
   public investissement = 0;
 
   constructor(private tradingService: TradingService,
+              private tickerService: TickerService,
               private globalInfoService: GlobalInfoApi) {
 
   }
@@ -73,11 +75,11 @@ export class WalletService {
     this.tradingService.getTransactions().subscribe((transactions) => {
       this.transactions = transactions;
       this.investissement = 0;
-      for (let transaction of this.transactions) {
+      for (const transaction of this.transactions) {
         if (transaction.type != 'payin') continue;
-        let symbol = this.getSymbol(transaction.currency);
+        const symbol = this.getSymbol(transaction.currency);
         this.globalInfoService.getCandles(symbol, 100, 'D1').subscribe((candles) => {
-          let candle = this.findCandleForTransaction(transaction, candles);
+          const candle = this.findCandleForTransaction(transaction, candles);
           if (candle) {
             this.investissement += ((+candle.open + +candle.close) / 2) * +transaction.amount;
           }
@@ -105,14 +107,14 @@ export class WalletService {
   }
 
   private loadCurrentStockValue(stock: Stock) {
-      if(stock.currency == 'USD') return;
+      if (stock.currency === 'USD') return;
       this.getTickerForGlobalConversion(stock, 0);
   }
 
 
 
   private findCandleForTransaction(transaction: Transaction, ethCandles: Candle[]): Candle {
-    for (let candle of ethCandles) {
+    for (const candle of ethCandles) {
       if (candle.timestamp.getDate() == transaction.createdAt.getDate()
         && candle.timestamp.getMonth() == transaction.createdAt.getMonth()
         && candle.timestamp.getFullYear() == transaction.createdAt.getFullYear()) {
@@ -123,7 +125,7 @@ export class WalletService {
   }
 
   private getSymbol(currency: string) {
-    for (let cs of this.currencySymbol) {
+    for (const cs of this.currencySymbol) {
       if (cs.currency === currency) {
         return cs.symbol;
       }
@@ -132,19 +134,15 @@ export class WalletService {
   }
 
   private getTickerForGlobalConversion(stock: Stock, index: number) {
-    this.globalInfoService.getTicker(stock.currency, this.globalConversion[index].currency)
-      .subscribe((ticker: Ticker) => {
-          stock.cours = ticker;
-          if(this.globalConversion[index].convertCurrency != '') {
-            this.globalInfoService.getTicker(this.globalConversion[index].currency, this.globalConversion[index].convertCurrency).subscribe((tickerToUsd) => {
-              stock.coursUsd = tickerToUsd;
-            })
-          }
-        }, (error) => {
-          if (this.globalConversion.length > index) {
-            this.getTickerForGlobalConversion(stock, index + 1);
-          }
-        }
-      );
+    if (this.globalConversion.length <= index) return null;
+
+    const ticker: Ticker = this.tickerService.getTicker(stock.currency + this.globalConversion[index].currency);
+    if (ticker == null && this.globalConversion.length > index) return this.getTickerForGlobalConversion(stock, index + 1);
+
+    stock.cours = ticker;
+    if (this.globalConversion[index].convertCurrency !== '') {
+      const convertTicker = this.tickerService.getTicker(this.globalConversion[index].currency + this.globalConversion[index].convertCurrency);
+      stock.coursUsd = convertTicker;
+    }
   }
 }
