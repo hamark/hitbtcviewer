@@ -16,6 +16,7 @@ import {FormsModule} from '@angular/forms';
 import { AlertModule } from 'ngx-bootstrap';
 import {StockService} from './wallet/stock.service';
 import {TickerService} from './wallet/ticker.service';
+import {AutoOrders} from './auto/auto-order.service';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import {TickerService} from './wallet/ticker.service';
     GlobalInfoApi,
     WalletService,
     StockService,
+    AutoOrders,
     TickerService,
     DecimalPipe],
 

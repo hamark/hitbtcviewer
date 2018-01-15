@@ -54,13 +54,34 @@
       <table *ngIf="wallet.wallet.length > 0" class="table table-dark">
         <tr>
           <th>Nom</th>
+          <th>Diff1</th>
+          <th>Diff2</th>
+        </tr>
+        <tr *ngFor="let diffStock of diffStocks">
+          <td>{{diffStock.stockDiff.name}}</td>
+          <td>
+            <span [ngClass]="(diffStock.gain1 > 0) ? 'green' : 'red'">{{ diffStock.gain1 | number: '.1'}} %</span>
+          </td>
+          <td>
+            <span [ngClass]="(diffStock.gain2 > 0) ? 'green' : 'red'">{{ diffStock.gain2 | number: '.2'}} %</span>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+  <div class="row justify-content-center margin-top">
+    <div class="col-12">
+      <table *ngIf="wallet.wallet.length > 0" class="table table-dark">
+        <tr>
+          <th>Nom</th>
           <th>Valeur actuelle</th>
           <th>Evolution 24H</th>
           <th>Total $</th>
         </tr>
         <tr *ngFor="let stock of wallet.wallet">
           <td>{{stock.currency}}</td>
-          <td><span *ngIf="stock.cours">{{ stock.cours.last | number: '.1'}}</span></td>
+          <td><span *ngIf="stock.cours">{{ stock.cours.last | number: '.1-5'}}</span></td>
           <td [ngClass]="(stock.evolution() > 0) ? 'green' : 'red'">{{ stock.evolution() | number: '.1'}} %</td>
           <td>{{ stock.totalUSD() | number: '.1' }} $</td>
         </tr>

@@ -9,6 +9,7 @@ import {WalletService} from './wallet/wallet.service';
 import {Transaction} from './hitbtc/model/transaction';
 import {AuthentificationService} from './hitbtc/auth/authentification.service';
 import {TickerService} from "./wallet/ticker.service";
+import {AutoOrders} from './auto/auto-order.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
 
   constructor(private walletService: WalletService,
               private authService: AuthentificationService,
-              private tickerService: TickerService) {
+              private tickerService: TickerService,
+              private autoOrder: AutoOrders) {
 
   }
 
@@ -34,6 +36,7 @@ export class AppComponent implements OnInit {
     this.tickerService.runTickerLoad();
     this.walletService.loadWallet();
     this.walletService.loadInvestment();
+    this.autoOrder.loadAutoOrders();
   }
 
   isAuthDefined() {
@@ -65,4 +68,8 @@ export class AppComponent implements OnInit {
     this.authService.privateKey = privateKey;
   }
 
+
+  get diffStocks() {
+    return this.autoOrder.stockDiffCalculateds;
+  }
 }
