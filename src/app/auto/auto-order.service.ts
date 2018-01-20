@@ -36,28 +36,28 @@ export class AutoOrders {
 
   calculDifference(stockDiff: StockDiff) {
     let orderBookEth = this.tickerService.getOrderBook(stockDiff.midleCurrency + stockDiff.mainCurrency);
-    let orderBookXrpUsd = this.tickerService.getOrderBook(stockDiff.name + stockDiff.mainCurrency);
-    let orderBookXrpEth = this.tickerService.getOrderBook(stockDiff.name + stockDiff.midleCurrency);
-    if (!orderBookEth || !orderBookXrpUsd || !orderBookXrpEth) return;
+    let orderBookToUSD = this.tickerService.getOrderBook(stockDiff.name + stockDiff.mainCurrency);
+    let orderBookToETH = this.tickerService.getOrderBook(stockDiff.name + stockDiff.midleCurrency);
+    if (!orderBookEth || !orderBookToUSD || !orderBookToETH) return;
 
-    let ethDollarBuy = orderBookEth.orderBook.ask[0].price;
-    let ethDollarSell = orderBookEth.orderBook.bid[0].price;
+    let ethUSDFirstBuy = orderBookEth.orderBook.bid[0].price;
+    let ethUSDFirstVente = orderBookEth.orderBook.ask[0].price;
 
     // $ -> stock -> ETH
-    let stockSellDollar = orderBookXrpUsd.orderBook.bid[0].price;
-    let stockBuylEth = orderBookXrpEth.orderBook.ask[0].price;
-    let stockBuyEthConverted = stockBuylEth * ethDollarSell;
+    let stockSellUSDAAcheter = orderBookToUSD.orderBook.ask[0].price;
+    let stockBuyEthAVendre = orderBookToETH.orderBook.bid[0].price;
+    let stockBuyEthConverted = stockBuyEthAVendre * ethUSDFirstVente;
 
     // ETH -> stock -> $
-    let stockBuyDollar = orderBookXrpUsd.orderBook.ask[0].price;
-    let stockSellEth = orderBookXrpEth.orderBook.bid[0].price;
-    let stockSellEthConverted = stockSellEth * ethDollarBuy;
+    let stockBuyDollar = orderBookToUSD.orderBook.bid[0].price;
+    let stockSellEth = orderBookToETH.orderBook.ask[0].price;
+    let stockSellEthConverted = stockSellEth * ethUSDFirstBuy;
 
 
-    let gain$ = (stockSellDollar * 100) / (stockBuyEthConverted) - 100;
-    let gainETH = (stockSellEthConverted * 100) / (stockBuyDollar) - 100;
+    let gain$ = (stockBuyEthConverted* 100) / (stockSellUSDAAcheter) - 100;
+    let gainETH = (stockBuyDollar * 100) / (stockSellEthConverted) - 100;
 
-    this.addToDiffTable(new StockDiffCalculated(stockDiff, gain$, stockBuyDollar, stockSellEthConverted, gainETH, stockSellDollar, stockBuyEthConverted));
+    this.addToDiffTable(new StockDiffCalculated(stockDiff, gain$, stockBuyDollar, stockSellEthConverted, gainETH, stockSellUSDAAcheter, stockBuyEthConverted));
   }
 
   private addToDiffTable(stockDiffCalculated: StockDiffCalculated) {
