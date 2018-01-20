@@ -17,6 +17,7 @@ import { AlertModule } from 'ngx-bootstrap';
 import {StockService} from './wallet/stock.service';
 import {TickerService} from './wallet/ticker.service';
 import {AutoOrders} from './auto/auto-order.service';
+import {MinMaxAutoOrder} from './auto/minmac.auto';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import {AutoOrders} from './auto/auto-order.service';
     WalletService,
     StockService,
     AutoOrders,
+    MinMaxAutoOrder,
     TickerService,
     DecimalPipe],
 

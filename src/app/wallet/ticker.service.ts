@@ -20,7 +20,7 @@ export class TickerService {
   runTickerLoad() {
     const interval = Observable.interval(3000);
     interval.subscribe(() => {
-      this.loadTickers();
+      //this.loadTickers();
     });
     const interval2 = Observable.interval(2000);
     interval.subscribe(() => {
@@ -44,7 +44,8 @@ export class TickerService {
 
 
   private loadOrderBook() {
-    let symbols = ['DOGEUSD', 'DOGEETH', 'ETHUSD', 'MCOETH', 'MCOUSD', 'NEOUSD', 'NEOETH', 'LTCUSD', 'LTCETH', 'XMRETH', 'XMRUSD', 'NGCETH', 'NGCUSD'];
+    // let symbols = ['DOGEUSD', 'DOGEETH', 'ETHUSD', 'MCOETH', 'MCOUSD', 'NEOUSD', 'NEOETH', 'LTCUSD', 'LTCETH', 'XMRETH', 'XMRUSD', 'NGCETH', 'NGCUSD', 'SUBUSD'];
+    let symbols = ['SUBUSD'];
 
     for (let symbol of symbols) {
 

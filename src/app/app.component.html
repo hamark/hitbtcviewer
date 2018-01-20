@@ -49,21 +49,49 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="col-2">
+      <button (click)="runOrders()"></button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <table *ngIf="buyOrder || sellOrder" class="table table-dark">
+        <tr>
+          <th>Order symbol</th>
+          <th>side</th>
+          <th>quantity</th>
+          <th>statut</th>
+        </tr>
+        <tr>
+          <td>{{buyOrder.side}}</td>
+          <td>{{buyOrder.side}}</td>
+          <td>{{buyOrder.quantity}}</td>
+          <td>{{buyOrder.status}}</td>
+        </tr>
+        <tr>
+          <td>{{sellOrder.side}}</td>
+          <td>{{sellOrder.side}}</td>
+          <td>{{sellOrder.quantity}}</td>
+          <td>{{sellOrder.status}}</td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
   <div class="row justify-content-center margin-top">
     <div class="col-12">
       <table *ngIf="wallet.wallet.length > 0" class="table table-dark">
         <tr>
           <th>Nom</th>
-          <th>Diff1</th>
-          <th>Diff2</th>
+          <th>Diff</th>
         </tr>
         <tr *ngFor="let diffStock of diffStocks">
-          <td>{{diffStock.stockDiff.name}}</td>
+          <td>{{diffStock.symbol}}</td>
           <td>
-            <span [ngClass]="(diffStock.gain1 > 0) ? 'green' : 'red'">{{ diffStock.gain1 | number: '.1'}} %</span>
-          </td>
-          <td>
-            <span [ngClass]="(diffStock.gain2 > 0) ? 'green' : 'red'">{{ diffStock.gain2 | number: '.2'}} %</span>
+            <span [ngClass]="(diffStock.diff > 0) ? 'green' : 'red'">{{ diffStock.diff | number: '.2'}} %</span>
           </td>
         </tr>
       </table>

@@ -40,17 +40,17 @@ export class AutoOrders {
     let orderBookXrpEth = this.tickerService.getOrderBook(stockDiff.name + stockDiff.midleCurrency);
     if (!orderBookEth || !orderBookXrpUsd || !orderBookXrpEth) return;
 
-    let ethDollarBuy = orderBookEth.orderBook.ask[0].price;
-    let ethDollarSell = orderBookEth.orderBook.bid[0].price;
+    let ethDollarBuy = orderBookEth.orderBook.bid[0].price;
+    let ethDollarSell = orderBookEth.orderBook.ask[0].price;
 
     // $ -> stock -> ETH
-    let stockSellDollar = orderBookXrpUsd.orderBook.bid[0].price;
-    let stockBuylEth = orderBookXrpEth.orderBook.ask[0].price;
+    let stockSellDollar = orderBookXrpUsd.orderBook.ask[0].price;
+    let stockBuylEth = orderBookXrpEth.orderBook.bid[0].price;
     let stockBuyEthConverted = stockBuylEth * ethDollarSell;
 
     // ETH -> stock -> $
-    let stockBuyDollar = orderBookXrpUsd.orderBook.ask[0].price;
-    let stockSellEth = orderBookXrpEth.orderBook.bid[0].price;
+    let stockBuyDollar = orderBookXrpUsd.orderBook.bid[0].price;
+    let stockSellEth = orderBookXrpEth.orderBook.ask[0].price;
     let stockSellEthConverted = stockSellEth * ethDollarBuy;
 
 

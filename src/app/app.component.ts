@@ -10,6 +10,7 @@ import {Transaction} from './hitbtc/model/transaction';
 import {AuthentificationService} from './hitbtc/auth/authentification.service';
 import {TickerService} from "./wallet/ticker.service";
 import {AutoOrders} from './auto/auto-order.service';
+import {MinMaxAutoOrder} from './auto/minmac.auto';
 
 @Component({
   selector: 'app-root',
@@ -27,16 +28,19 @@ export class AppComponent implements OnInit {
   constructor(private walletService: WalletService,
               private authService: AuthentificationService,
               private tickerService: TickerService,
-              private autoOrder: AutoOrders) {
+              private autoOrder: AutoOrders,
+              private minMaxAutoOrder: MinMaxAutoOrder) {
 
   }
 
   ngOnInit(): void {
 
     this.tickerService.runTickerLoad();
-    this.walletService.loadWallet();
-    this.walletService.loadInvestment();
-    this.autoOrder.loadAutoOrders();
+    // this.walletService.loadWallet();
+    // this.walletService.loadInvestment();
+    // this.autoOrder.loadAutoOrders();
+    this.minMaxAutoOrder.loadAutoOrders();
+    this.minMaxAutoOrder.refreshorder();
   }
 
   isAuthDefined() {
@@ -51,6 +55,13 @@ export class AppComponent implements OnInit {
     return this.walletService.transactions;
   }
 
+  get buyOrder() {
+    return this.minMaxAutoOrder.buyOrder;
+  }
+
+  get sellOrder() {
+    return this.minMaxAutoOrder.sellOrder;
+  }
 
   get apiKey() {
     return this.authService.apiKey;
@@ -70,6 +81,10 @@ export class AppComponent implements OnInit {
 
 
   get diffStocks() {
-    return this.autoOrder.stockDiffCalculateds;
+    return this.minMaxAutoOrder.askBidDiff;
+  }
+
+  runOrders() {
+    this.minMaxAutoOrder.runAutoOrder();
   }
 }
