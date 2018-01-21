@@ -50,28 +50,26 @@
   </div>
 
   <div class="row">
-    <div class="col-2">
-      <button (click)="runOrders()"></button>
-    </div>
-  </div>
-
-  <div class="row">
     <div class="col-12">
-      <table *ngIf="buyOrder || sellOrder" class="table table-dark">
+      <table class="table table-dark">
         <tr>
-          <th>Order symbol</th>
+          <th>Symbol</th>
+          <th>Price</th>
           <th>side</th>
           <th>quantity</th>
           <th>statut</th>
         </tr>
-        <tr>
-          <td>{{buyOrder.side}}</td>
+        <tr *ngIf="buyOrder">
+
+          <td>{{buyOrder.symbol}}</td>
+          <td>{{buyOrder.price | number: '.2'}}</td>
           <td>{{buyOrder.side}}</td>
           <td>{{buyOrder.quantity}}</td>
           <td>{{buyOrder.status}}</td>
         </tr>
-        <tr>
-          <td>{{sellOrder.side}}</td>
+        <tr *ngIf="sellOrder">
+          <td>{{buyOrder.symbol}}</td>
+          <td>{{sellOrder.price | number: '.2'}}</td>
           <td>{{sellOrder.side}}</td>
           <td>{{sellOrder.quantity}}</td>
           <td>{{sellOrder.status}}</td>

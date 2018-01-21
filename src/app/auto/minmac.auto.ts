@@ -80,38 +80,55 @@ export class MinMaxAutoOrder {
   }
 
   runAutoOrder() {
+    const interval = Observable.interval(3000);
+    interval.subscribe(() => {
+      this.placeSellBuyOrders();
+    });
+  }
+
+
+  private placeSellBuyOrders() {
     let symbol = "SUBUSD";
     let orderBook = this.tickerService.getOrderBook(symbol);
+    if(orderBook == null) return;
     let firstBuyPrice = +orderBook.orderBook.bid[0].price;
     let firstSellPrice = +orderBook.orderBook.ask[0].price;
     let buyPrice = firstBuyPrice + 0.001;
-    let sellPrice =  firstSellPrice - 0.001;
+    let sellPrice = firstSellPrice - 0.001;
     let diffPercent = ((sellPrice - buyPrice) * 100) / buyPrice;
-    if(diffPercent > 2) {
+    if (diffPercent > 2) {
       // addOrders
-      if(this.buyOrder == null || this.buyOrder.status == "filled") {
+      if (this.buyOrder == null || this.buyOrder.status == "filled") {
         let orderBuy: Order = this.createBuyOrder(symbol, buyPrice);
         this.tradingApiService.addOrder(orderBuy).subscribe((order) => {
+          console.log("Buy order");
+          console.log(order);
           this.buyOrder = order;
         });
       } else {
-        if(this.buyOrder.price < firstBuyPrice) {
+        if (this.buyOrder.price < firstBuyPrice) {
           let orderBuy: Order = this.createBuyOrder(symbol, buyPrice);
           this.tradingApiService.replaceOrder(this.buyOrder, orderBuy).subscribe((order) => {
+            console.log("refresh buy order");
+            console.log(order);
             this.buyOrder = order;
           })
         }
       }
 
-      if(this.sellOrder == null || this.sellOrder.status == "filled") {
+      if (this.sellOrder == null || this.sellOrder.status == "filled") {
         let orderSell: Order = this.createSellOrder(symbol, sellPrice);
         this.tradingApiService.addOrder(orderSell).subscribe((order) => {
-          this.buyOrder = order;
+          console.log("Sell order");
+          console.log(order);
+          this.sellOrder = order;
         });
-      }  else {
-        if(this.sellOrder.price > firstSellPrice) {
+      } else {
+        if (this.sellOrder.price > firstSellPrice) {
           let orderSell: Order = this.createSellOrder(symbol, sellPrice);
           this.tradingApiService.replaceOrder(this.sellOrder, orderSell).subscribe((order) => {
+            console.log("refresh sell order");
+            console.log(order);
             this.sellOrder = order;
           })
         }
@@ -123,7 +140,6 @@ export class MinMaxAutoOrder {
       this.sellOrder.status = "deleted";
     }
   }
-
 
   private createBuyOrder(symbol: string, price: number) {
     let order = new Order();

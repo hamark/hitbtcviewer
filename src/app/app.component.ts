@@ -39,7 +39,8 @@ export class AppComponent implements OnInit {
     // this.walletService.loadWallet();
     // this.walletService.loadInvestment();
     // this.autoOrder.loadAutoOrders();
-    this.minMaxAutoOrder.loadAutoOrders();
+    // this.minMaxAutoOrder.loadAutoOrders();
+    this.minMaxAutoOrder.runAutoOrder();
     this.minMaxAutoOrder.refreshorder();
   }
 
